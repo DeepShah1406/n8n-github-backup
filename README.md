@@ -63,6 +63,14 @@ Edit the **Globals** node in the backup workflow:
   }
 }
 ```
+---
+
+## Contact
+
+- 📧 Email: [shahdeep1406@gmail.com](mailto:shahdeep1406@gmail.com)
+- 🐙 GitHub: [DeepShah1406](https://github.com/DeepShah1406)
+- 💼 LinkedIn: [deepshah1406](https://www.linkedin.com/in/deepshah1406)
+- 🌐 Website: [Deep Shah](https://deepshah1406.github.io/)
 
 ---
 
