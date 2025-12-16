@@ -1,0 +1,102 @@
+{
+  "active": false,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-11T12:18:19.154Z",
+  "id": "IBPjSR6MfcVzGTzr",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Discord to Discord bot",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "83ba33fe-5150-48a0-b7e7-fcceecba89ea",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "get",
+        "guildId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e0493430-104c-4ad2-a619-8e4efec04b6c",
+      "name": "Get a message",
+      "webhookId": "72e4cd57-b0b5-405f-90cf-b29841eef850"
+    },
+    {
+      "parameters": {
+        "content": "# A Discord to Discord bot\n Here I am trying to trigger the workflow when a message is sent to a Discord channel, using that message the agent will extract the data, summarize it and send back a summary message to a different Discord channel.",
+        "height": 176,
+        "width": 448
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -512,
+        -192
+      ],
+      "id": "95ae3846-fbe5-41bb-abad-adba266e565f",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-11T12:18:19.516Z",
+      "createdAt": "2025-12-11T12:18:19.516Z",
+      "role": "workflow:owner",
+      "workflowId": "IBPjSR6MfcVzGTzr",
+      "projectId": "LWAlEY3p5dqeoHI6"
+    }
+  ],
+  "staticData": null,
+  "tags": [
+    {
+      "updatedAt": "2025-11-27T09:44:29.563Z",
+      "createdAt": "2025-11-27T09:44:29.563Z",
+      "id": "SsELVvolJDi1dvB6",
+      "name": "Personal"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-11T12:24:50.000Z",
+  "versionId": "346263c2-ddd5-4d54-8875-52198c8d1636"
+}
