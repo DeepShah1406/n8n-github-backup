@@ -1,0 +1,302 @@
+{
+  "active": false,
+  "connections": {
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-02T09:19:07.410Z",
+  "id": "LIxtfKyl7NPv3e0T",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "News Workflow 2.0 Google list",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Hey! Your job is to summarise the article in bullet points, extracting the most important details. Format it neatly and use a few emojis for better look.\n\nOutput format:\n• Source: {WebsiteName}\n• Author: {AuthorName if available}\n• Published: {Date}\n• Category: {e.g., Tech / Business / Sports / Entertainment / Politics}\n• Reading time (approx): {X min}\n\nKey Takeaway: {One-line summary of why it matters}\n\nSummary bullets:\n– {Important point 1}\n– {Important point 2}\n– {Important point 3}\n…\n\n🔗 Read full article: {Link}\n\nTitle: {{ $json.title }}\nLink: {{ $json.link }}\nSnippet: {{ $json.contentSnippet }}\nContent: {{ $json.content }}\nGUID: {{ $json.guid }}\nPubDate: {{ $json.pubDate }}",
+        "needsFallback": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1584,
+        672
+      ],
+      "id": "ae59d7e9-8e17-4e36-934e-63c457b68d0c",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1472,
+        848
+      ],
+      "id": "b781e5c4-d009-42af-8f4b-7456ce66be0a",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "5ak8btP5PbtODyhw",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=THERE YOU GO -\n{{ $json.text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1936,
+        800
+      ],
+      "id": "0c81c28c-2917-45c0-9369-4ede78d96fab",
+      "name": "Discord",
+      "webhookId": "665c9e02-a502-4309-aa43-7c7ccca4109c",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "qS5AROFBwgvvkRux",
+          "name": "Discord Google Summaries Webhook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 20
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1360,
+        672
+      ],
+      "id": "7803df0d-8084-47bd-9404-96bf770c8ebc",
+      "name": "Wait",
+      "webhookId": "30a53f5e-de39-49bf-8aa8-8b00c24171b3"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick-17b-128e-instruct",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1728,
+        848
+      ],
+      "id": "de8a85ef-7c02-4df8-9222-d2a7d844daaa",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "5ak8btP5PbtODyhw",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1136,
+        800
+      ],
+      "id": "0c25d46d-77b1-4dc9-81a1-daa5fb52ffee",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"content\": null,\n  \"embeds\": [\n    {\n      \"title\": \"📰 Title of article\",\n      \"description\": \"**Source:** WebsiteName\\n**Author:** AuthorName\\n**Published:** Date\\n**Category:** Category\\n\\n**Key Takeaway:** …\\n\\n**Summary:**\\n– bullet1\\n– bullet2\\n– bullet3\\n\\n🔗 [Read full article](URL)\",\n      \"color\": 3447003\n    }\n  ]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1856,
+        1040
+      ],
+      "id": "f8a2841a-2784-4a68-811e-26f1b8d9dbb7",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        464,
+        800
+      ],
+      "id": "d117792e-3329-4bd9-89dc-213d956910a2",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "return[\n  { \"json\": { \"feed\": \"https://rss.app/feeds/QMRjU7P3Gcw9B2Mb.xml\" } },\n  { \"json\": { \"feed\": \"https://rss.app/feeds/HP6XfRZO1B3fWjpP.xml\" } },\n  { \"json\": { \"feed\": \"https://rss.app/feeds/Bok5LQ5BVAh1GcbF.xml\" } },\n  { \"json\": { \"feed\": \"https://rss.app/feeds/KYSKyRxsxjaDh6eL.xml\" } },\n  { \"json\": { \"feed\": \"https://rss.app/feeds/V8tJvIcWk3umYD9l.xml\" } }\n]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        688,
+        800
+      ],
+      "id": "17739327-4ba6-42bb-ae1a-d92d786ef1ae",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.feed }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        912,
+        800
+      ],
+      "id": "35b3f512-9ae1-4fa1-82b9-15802a1cf8a1",
+      "name": "RSS Read"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-02T09:19:07.862Z",
+      "createdAt": "2025-12-02T09:19:07.862Z",
+      "role": "workflow:owner",
+      "workflowId": "LIxtfKyl7NPv3e0T",
+      "projectId": "LWAlEY3p5dqeoHI6"
+    }
+  ],
+  "staticData": null,
+  "tags": [
+    {
+      "updatedAt": "2025-12-12T06:34:30.450Z",
+      "createdAt": "2025-12-12T06:34:30.450Z",
+      "id": "6TDCjlUJCB2eki1P",
+      "name": "NEWS"
+    },
+    {
+      "updatedAt": "2025-11-27T09:44:29.563Z",
+      "createdAt": "2025-11-27T09:44:29.563Z",
+      "id": "SsELVvolJDi1dvB6",
+      "name": "Personal"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-12T06:34:55.000Z",
+  "versionId": "27127be3-9b04-46ec-823d-eb27ba1a7f4f"
+}
