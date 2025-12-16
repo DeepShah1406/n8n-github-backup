@@ -1,0 +1,252 @@
+{
+  "active": false,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2025-12-02T05:35:09.043Z",
+  "id": "y8gn08M1zeIQLMDZ",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "My workflow 8",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "da46867a-fbbc-4575-9431-f8ce1df6f350",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -192,
+        176
+      ],
+      "id": "4d62000a-4d10-4a9d-b806-115540648ce9",
+      "name": "When chat message received",
+      "webhookId": "ca449506-17c9-4cb8-9bcf-85487d990b54"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "options": {
+          "systemMessage": "=Hey! Your job is to summarise the article in bullet points, extracting the most important details. Format it neatly and use a few emojis for better look.\n\nOutput format:\n• Source: {WebsiteName}\n• Author: {AuthorName if available}\n• Published: {Date}\n• Category: {e.g., Tech / Business / Sports / Entertainment / Politics}\n• Reading time (approx): {X min}\n\nKey Takeaway: {One-line summary of why it matters}\n\nSummary bullets:\n– {Important point 1}\n– {Important point 2}\n– {Important point 3}\n…\n🔗 Read full article: {Link}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        640,
+        96
+      ],
+      "id": "2b093709-586c-49e8-9f74-61e00371a6c1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        224,
+        400
+      ],
+      "id": "9d392362-425a-41be-bfb3-349c0242d2d7",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "5ak8btP5PbtODyhw",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        704,
+        352
+      ],
+      "id": "9ad38511-da76-491a-8b9a-ec592428701e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.chatInput }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        416,
+        192
+      ],
+      "id": "b2306c7d-6e6e-4fe3-b49e-852654468898",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-pro",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        576,
+        288
+      ],
+      "id": "b6323dba-aee6-4d24-a85a-abdc72812b50",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "a6RDFEBnPzOeghGl",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1008,
+        96
+      ],
+      "id": "0d2dfac5-35cb-4564-9494-73c4a14ecb76",
+      "name": "Discord",
+      "webhookId": "5da79a1a-5dec-45ba-806f-992662258e10",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "KkHuTtciUr8TVwyS",
+          "name": "Discord Webhook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.chatInput }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        128,
+        176
+      ],
+      "id": "e57c3bf2-127b-4abc-bab3-ab0d0d2908e1",
+      "name": "RSS Read"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-02T05:35:09.073Z",
+      "createdAt": "2025-12-02T05:35:09.073Z",
+      "role": "workflow:owner",
+      "workflowId": "y8gn08M1zeIQLMDZ",
+      "projectId": "LWAlEY3p5dqeoHI6"
+    }
+  ],
+  "staticData": null,
+  "tags": [
+    {
+      "updatedAt": "2025-11-27T09:44:29.563Z",
+      "createdAt": "2025-11-27T09:44:29.563Z",
+      "id": "SsELVvolJDi1dvB6",
+      "name": "Personal"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-03T12:07:23.000Z",
+  "versionId": "ffdb5cf3-47fa-439f-8921-1437927ddf88"
+}
