@@ -1,0 +1,150 @@
+{
+  "active": false,
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2025-11-29T05:33:29.139Z",
+  "id": "TNOomDKq6CsVjMaS",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Auto_fill_Rephrase_Assistant_29_11_2025",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0d5af5be-1d89-40e2-97e2-d550e854f1fb",
+      "name": "When chat message received",
+      "webhookId": "f6fcaf49-91f8-46a4-8bbb-f3a84d9a618d"
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an assistant tasked with filling in the \"products/services\" field in the provided JSON.  \nUse all the information present in the JSON — including data before the \"products/services\" field, as well as any content already within the \"products/services\" field.  \nBased on this data, generate detailed content in the form of bullet points.  \nThe bullet points should describe the products/services comprehensively, using relevant keywords, common terms, mispronounced words, and variations present in \"products/services\" field.  \nEach bullet point should provide substantial information, covering features, benefits, usage, and any other relevant details that help describe the product or service in-depth.  \nDo not include emojis, fluff, or unnecessary commentary.  \nReturn only the updated JSON with the new \"products/services\" field — no extra explanations or text."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        288,
+        0
+      ],
+      "id": "0aa604c9-83b7-4edd-b671-4d5d52f33703",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        224,
+        224
+      ],
+      "id": "346da4fd-76e9-42d3-a8af-e457cb9ab442",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "a6RDFEBnPzOeghGl",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        352,
+        224
+      ],
+      "id": "5e5fdfa9-67df-4a90-8d94-db1272b078e6",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n    \"id\": \"\",\n    \"name\": \"\",\n    \"email\": \"\",\n    \"ownername\": \"\",\n    \"ownernumber\": \"\",\n    \"clientowner\": \"\",\n    \"officecontact\": \"\",\n    \"country\": \"\",\n    \"state\": \"\",\n    \"city\": \"\",\n    \"zipcode\": \"\",\n    \"address\": \"\",\n    \"contactperson\": \"\",\n    \"officewhatsapp\": \"\",\n    \"companydetails\": \"\",\n    \"website\": \"\",\n    \"payment\": \"\",\n    \"logo\": \"\",\n    \"businesstype\": \"\",\n    \"isvip\": \"\",\n    \"assignedemp\": \"\",\n    \"ischild\": \"\",\n    \"post\": \"\",\n    \"story\": \"\",\n    \"reels\": \"\",\n    \"extra\": \"\",\n    \"media\": \"\",\n    \"isfacebook\": \"\",\n    \"isinstagram\": \"\",\n    \"isgmb\": \"\",\n    \"isyoutube\": \"\",\n    \"istwitter\": \"\",\n    \"islinkedin\": \"\",\n    \"istiktok\": \"\",\n    \"issnapchat\": \"\",\n    \"ispinterest\": \"\",\n    \"facebooklink\": \"\",\n    \"linkedinlink\": \"\",\n    \"youtubelink\": \"\",\n    \"gmblink\": \"\",\n    \"pinterestlink\": \"\",\n    \"isapproved\": \"\",\n    \"digitalfile\": \"\",\n    \"logofile\": \"\",\n    \"googledrivefolderid\": \"\",\n    \"status\": \"\",\n    \"isactive\": \"\",\n    \"profilestatus\": \"\",\n    \"iscredential\": \"\",\n    \"createddate\": \"\",\n    \"updateddate\": \"\",\n    \"instagramUsername\": \"\",\n    \"instagramPassword\": \"\",\n    \"tiktokUsername\": \"\",\n    \"tiktokPassword\": \"\",\n    \"snapchatUsername\": \"\",\n    \"snapchatPassword\": \"\",\n    \"twitterUsername\": \"\",\n    \"twitterPassword\": \"\",\n    \"products/services\": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        224
+      ],
+      "id": "9c3c98b3-c49a-4718-8e97-4ccaac6539d2",
+      "name": "Structured Output Parser"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-11-29T05:33:29.171Z",
+      "createdAt": "2025-11-29T05:33:29.171Z",
+      "role": "workflow:owner",
+      "workflowId": "TNOomDKq6CsVjMaS",
+      "projectId": "LWAlEY3p5dqeoHI6"
+    }
+  ],
+  "staticData": null,
+  "tags": [
+    {
+      "updatedAt": "2025-11-27T09:45:17.098Z",
+      "createdAt": "2025-11-27T09:45:17.098Z",
+      "id": "LpCfSTD0Wl2dg0bi",
+      "name": "KERYAR"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-02T05:20:57.000Z",
+  "versionId": "d4e5b76f-508a-4eef-888c-d7c6566ab9de"
+}
