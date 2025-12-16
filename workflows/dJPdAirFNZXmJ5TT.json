@@ -104,7 +104,9 @@
   "createdAt": "2025-11-27T09:46:45.450Z",
   "id": "dJPdAirFNZXmJ5TT",
   "isArchived": false,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "name": "vector_store_workflow copy",
   "nodes": [
     {
@@ -120,7 +122,7 @@
     },
     {
       "parameters": {
-        "fileSelector": "/tmp/New_folder/Company/Upix_Inc_Company_Details.pdf",
+        "fileSelector": "/tmp/New_folder/Company/Company_Data.json",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
@@ -134,7 +136,7 @@
     },
     {
       "parameters": {
-        "operation": "pdf",
+        "operation": "fromJson",
         "options": {}
       },
       "type": "n8n-nodes-base.extractFromFile",
@@ -178,7 +180,9 @@
       "name": "Default Data Loader"
     },
     {
-      "parameters": {},
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
       "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
       "typeVersion": 1,
       "position": [
@@ -186,10 +190,18 @@
         224
       ],
       "id": "5749294e-b5bd-4e12-9b0c-5f820e2cf687",
-      "name": "Embeddings Google Gemini-test-dummy-company-data"
+      "name": "Embeddings Google Gemini-test-dummy-company-data",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "a6RDFEBnPzOeghGl",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
     },
     {
-      "parameters": {},
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
       "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
       "typeVersion": 1,
       "position": [
@@ -197,7 +209,13 @@
         976
       ],
       "id": "62764e3f-c4ff-4f97-822f-a7bdfb37d2c3",
-      "name": "Embeddings Google Gemini"
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "a6RDFEBnPzOeghGl",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
     },
     {
       "parameters": {
@@ -211,7 +229,13 @@
         768
       ],
       "id": "4c53607f-f454-4a4b-989c-6508e4508fb8",
-      "name": "Google Gemini Chat Model"
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "a6RDFEBnPzOeghGl",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
     },
     {
       "parameters": {
@@ -229,7 +253,9 @@
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "systemMessage": "**\"You are a professional content generation assistant/creator with 8 years of experience for a premium brand, tasked with creating engaging and creative content for Instagram. Your role is to generate **x Instagram posts**, **y reels**, and **z stories** using the company’s product or service data, including product details, brand information, customer insights, trends, reviews, and any other relevant information stored in the company’s database.**\n\n### **Guidelines for Content Creation**\n\n#### **Instagram Posts**\n\nCreate **x** diverse and captivating posts that highlight various aspects of the company’s offerings. This can include products, services, behind-the-scenes content, customer success stories, team highlights, innovation features, special promotions, or value propositions.\n\n- Include engaging captions\n    \n- Use relevant hashtags\n    \n- Add strong CTAs to encourage interaction, sharing, or conversions\n    \n- Ensure each post aligns with the brand’s overall voice and strategy (professional, friendly, luxury, innovative, etc.)\n    \n\n#### **Instagram Reels**\n\nProduce **y** short, creative videos that showcase the brand’s products or services in action. Reels should highlight key features, benefits, use cases, tutorials, customer testimonials, or trend-aligned moments to maximize engagement.\n\n- Keep them dynamic and visually appealing\n    \n- Follow current Instagram reel trends\n    \n- Tailor each concept to the brand’s identity and target audience\n    \n\n#### **Instagram Stories**\n\nGenerate **z** story ideas that provide quick updates, promotions, interactive elements, or insights.\n\n- Can include polls, quizzes, Q&A, product demos, reviews, countdown timers, or limited-time offers\n    \n- Should drive immediate engagement and quick customer action\n    \n- Visuals should be simple, attractive, and consistent with the brand’s style\n    \n\n### **Content Requirements**\n\nAll content must be aligned with the brand’s voice and identity—whether professional, elegant, bold, playful, or tech-forward.\n\nIncorporate relevant product or service details such as features, benefits, pricing, customization options, customer reviews, and market trends. Use insights from the company’s database (product catalog, customer behavior data, market trends, etc.) to ensure the content is personalized, accurate, and appealing to the target audience.\n\n### **Final Output: Content Calendar / Structured Plan**\n\nProvide a structured plan that includes:\n\n1. **x Instagram post ideas** with:\n    \n    - Captions\n        \n    - Hashtags\n        \n    - Suggested imagery or visual concepts\n        \n2. **y Instagram reel ideas** with:\n    \n    - Concepts\n        \n    - Brief execution notes\n        \n    - Suggested video formats\n        \n3. **z Instagram story ideas** with:\n    \n    - Visual suggestions\n        \n    - Interactive elements (polls, stickers, questions)\n        \n    - Engagement-driven features\n        \n\nYour goal is to create content that builds brand awareness, showcases offerings effectively, and drives interaction, sharing, and conversions.\"**"
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
@@ -243,7 +269,7 @@
     {
       "parameters": {
         "mode": "retrieve-as-tool",
-        "toolDescription": "data",
+        "toolDescription": "=data {{ $json.chatInput }}",
         "memoryKey": {
           "__rl": true,
           "value": "company_data_info",
@@ -261,7 +287,542 @@
       "name": "Simple Vector Store1"
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {}
+      }
+    ],
+    "Read/Write Files from Disk": [
+      {
+        "json": {
+          "mimeType": "application/json",
+          "fileType": "json",
+          "fileName": "Company_Data.json",
+          "fileExtension": "json",
+          "fileSize": "2.89 kB"
+        },
+        "binary": {
+          "data": {
+            "mimeType": "application/json",
+            "fileType": "json",
+            "fileExtension": "json",
+            "data": "ewogICAgImlkIjogbnVsbCwKICAgICJuYW1lIjogIlJlc2hhIEJ5IE1pcmlrYSIsCiAgICAiZW1haWwiOiAia2FuYWtwYXRlbEBnbWFpbC5jb20iLAogICAgIm93bmVybmFtZSI6ICJLYW5ha2JoYWkiLAogICAgIm93bmVybnVtYmVyIjogIis5MTk4MjUwNjE5MzMiLAogICAgImNsaWVudG93bmVyIjogIlJ1bWl0IiwKICAgICJvZmZpY2Vjb250YWN0IjogIis5MTk4MjUwNjE5MzMiLAogICAgImNvdW50cnkiOiBudWxsLAogICAgInN0YXRlIjogbnVsbCwKICAgICJjaXR5IjogbnVsbCwKICAgICJ6aXBjb2RlIjogbnVsbCwKICAgICJhZGRyZXNzIjogbnVsbCwKICAgICJjb250YWN0cGVyc29uIjogbnVsbCwKICAgICJvZmZpY2V3aGF0c2FwcCI6ICIrOTE5ODI1MDYxOTMzIiwKICAgICJjb21wYW55ZGV0YWlscyI6IG51bGwsCiAgICAid2Vic2l0ZSI6IG51bGwsCiAgICAicGF5bWVudCI6IDcwMDAsCiAgICAibG9nbyI6IG51bGwsCiAgICAiYnVzaW5lc3N0eXBlIjogIkNsb3RoZXMiLAogICAgImlzdmlwIjogbnVsbCwKICAgICJhc3NpZ25lZGVtcCI6IG51bGwsCiAgICAiaXNjaGlsZCI6IG51bGwsCiAgICAicG9zdCI6IDUsCiAgICAic3RvcnkiOiA1LAogICAgInJlZWxzIjogNSwKICAgICJleHRyYSI6IG51bGwsCiAgICAibWVkaWEiOiBudWxsLAogICAgImlzZmFjZWJvb2siOiBudWxsLAogICAgImlzaW5zdGFncmFtIjogbnVsbCwKICAgICJpc2dtYiI6IG51bGwsCiAgICAiaXN5b3V0dWJlIjogbnVsbCwKICAgICJpc3R3aXR0ZXIiOiBudWxsLAogICAgImlzbGlua2VkaW4iOiBudWxsLAogICAgImlzdGlrdG9rIjogbnVsbCwKICAgICJpc3NuYXBjaGF0IjogbnVsbCwKICAgICJpc3BpbnRlcmVzdCI6IG51bGwsCiAgICAiZmFjZWJvb2tsaW5rIjogbnVsbCwKICAgICJsaW5rZWRpbmxpbmsiOiBudWxsLAogICAgInlvdXR1YmVsaW5rIjogbnVsbCwKICAgICJnbWJsaW5rIjogbnVsbCwKICAgICJwaW50ZXJlc3RsaW5rIjogbnVsbCwKICAgICJpc2FwcHJvdmVkIjogbnVsbCwKICAgICJkaWdpdGFsZmlsZSI6IG51bGwsCiAgICAibG9nb2ZpbGUiOiBudWxsLAogICAgImdvb2dsZWRyaXZlZm9sZGVyaWQiOiBudWxsLAogICAgInN0YXR1cyI6ICJTbW9vdGgiLAogICAgImlzYWN0aXZlIjogMSwKICAgICJwcm9maWxlc3RhdHVzIjogbnVsbCwKICAgICJpc2NyZWRlbnRpYWwiOiBudWxsLAogICAgImNyZWF0ZWRkYXRlIjogbnVsbCwKICAgICJ1cGRhdGVkZGF0ZSI6IG51bGwsCiAgICAiaW5zdGFncmFtVXNlcm5hbWUiOiBudWxsLAogICAgImluc3RhZ3JhbVBhc3N3b3JkIjogbnVsbCwKICAgICJ0aWt0b2tVc2VybmFtZSI6IG51bGwsCiAgICAidGlrdG9rUGFzc3dvcmQiOiBudWxsLAogICAgInNuYXBjaGF0VXNlcm5hbWUiOiBudWxsLAogICAgInNuYXBjaGF0UGFzc3dvcmQiOiBudWxsLAogICAgInR3aXR0ZXJVc2VybmFtZSI6IG51bGwsCiAgICAidHdpdHRlclBhc3N3b3JkIjogbnVsbCwKICAgICJwcm9kdWN0cy9zZXJ2aWNlcyI6IFsKICAgICAgICAiSGFuZGNyYWZ0ZWQgQ2xvdGhpbmc6IE9mZmVyaW5nIGV4cXVpc2l0ZWx5IGhhbmRjcmFmdGVkIGdhcm1lbnRzLCBlbXBoYXNpemluZyBhcnRpc2FuYWwgcXVhbGl0eSwgdW5pcXVlIGRldGFpbHMsIGFuZCB0cmFkaXRpb25hbCBjcmFmdHNtYW5zaGlwLiBFYWNoIHBpZWNlIGlzIG1ldGljdWxvdXNseSBjcmVhdGVkIGJ5IHNraWxsZWQgYXJ0aXNhbnMsIGVuc3VyaW5nIHN1cGVyaW9yIGZpbmlzaCBhbmQgYSBkaXN0aW5jdCwgcGVyc29uYWwgdG91Y2ggdGhhdCBtYXNzLXByb2R1Y2VkIGNsb3RoaW5nIGxhY2tzLiBUaGlzIGluY2x1ZGVzIGhhbmQtZW1icm9pZGVyZWQgd29yaywgaW50cmljYXRlIGVtYmVsbGlzaG1lbnRzLCBhbmQgY3VzdG9tIGZhYnJpYyB0cmVhdG1lbnRzLiIsCiAgICAgICAgIkRlc2lnbmVyIExlaGFuZ2EgLyBEZXNpZ25lciBMZWhlbmdhOiBTcGVjaWFsaXppbmcgaW4gaGlnaC1lbmQsIGRlc2lnbmVyIGxlaGFuZ2FzIChhbHNvIHNwZWxsZWQgbGVobmdhLCBsZWhlbmdhIGNob2xpKSBwZXJmZWN0IGZvciB3ZWRkaW5ncywgZmVzdGl2ZSBvY2Nhc2lvbnMsIGFuZCBzcGVjaWFsIGV2ZW50cy4gVGhlc2UgY291dHVyZSBwaWVjZXMgZmVhdHVyZSB1bmlxdWUgZGVzaWducywgbHV4dXJpb3VzIGZhYnJpY3MsIGludHJpY2F0ZSBlbWJlbGxpc2htZW50cywgYW5kIGNvbnRlbXBvcmFyeSBzdHlsaW5nIGNvbWJpbmVkIHdpdGggdHJhZGl0aW9uYWwgYWVzdGhldGljcywgZW5zdXJpbmcgYSBzaG93LXN0b3BwaW5nIGxvb2sgZm9yIGV2ZXJ5IGNsaWVudC4gT3B0aW9ucyBpbmNsdWRlIHZhcmlvdXMgc2lsaG91ZXR0ZXMgbGlrZSBBLWxpbmUsIG1lcm1haWQsIGNpcmN1bGFyLCBhbmQga2FsaWRhciBsZWhhbmdhcy4iLAogICAgICAgICJDdXN0b21pemVkIE91dGZpdHMgLyBCZXNwb2tlIENsb3RoaW5nOiBQcm92aWRpbmcgYSBiZXNwb2tlIHRhaWxvcmluZyBzZXJ2aWNlIGZvciBjdXN0b21pemVkIG91dGZpdHMgdGFpbG9yZWQgdG8gaW5kaXZpZHVhbCBwcmVmZXJlbmNlcywgYm9keSBtZWFzdXJlbWVudHMsIGFuZCBzcGVjaWZpYyBldmVudCByZXF1aXJlbWVudHMuIENsaWVudHMgY2FuIGNvbGxhYm9yYXRlIG9uIGRlc2lnbiwgY2hvb3NlIGZhYnJpY3MsIGNvbG9ycywgYW5kIGVtYmVsbGlzaG1lbnRzIHRvIGNyZWF0ZSB1bmlxdWUgZHJlc3NlcywgZ293bnMsIGFuYXJrYWxpcywgc2FyZWVzLCBvciBvdGhlciBJbmRpYW4gZXRobmljIHdlYXIuIFRoaXMgcGVyc29uYWxpemVkIGFwcHJvYWNoIGVuc3VyZXMgYSBwZXJmZWN0IGZpdCwgdW5wYXJhbGxlbGVkIGNvbWZvcnQsIGFuZCBhIHRydWx5IG9uZS1vZi1hLWtpbmQgZ2FybWVudCB0aGF0IHJlZmxlY3RzIHRoZSBjbGllbnQncyB2aXNpb24gYW5kIHN0eWxlLiIKICAgIF0KfQ==",
+            "directory": "/tmp/New_folder/Company",
+            "fileName": "Company_Data.json",
+            "fileSize": "2.89 kB"
+          }
+        }
+      }
+    ],
+    "Extract from File": [
+      {
+        "json": {
+          "data": {
+            "id": null,
+            "name": "Resha By Mirika",
+            "email": "kanakpatel@gmail.com",
+            "ownername": "Kanakbhai",
+            "ownernumber": "+919825061933",
+            "clientowner": "Rumit",
+            "officecontact": "+919825061933",
+            "country": null,
+            "state": null,
+            "city": null,
+            "zipcode": null,
+            "address": null,
+            "contactperson": null,
+            "officewhatsapp": "+919825061933",
+            "companydetails": null,
+            "website": null,
+            "payment": 7000,
+            "logo": null,
+            "businesstype": "Clothes",
+            "isvip": null,
+            "assignedemp": null,
+            "ischild": null,
+            "post": 5,
+            "story": 5,
+            "reels": 5,
+            "extra": null,
+            "media": null,
+            "isfacebook": null,
+            "isinstagram": null,
+            "isgmb": null,
+            "isyoutube": null,
+            "istwitter": null,
+            "islinkedin": null,
+            "istiktok": null,
+            "issnapchat": null,
+            "ispinterest": null,
+            "facebooklink": null,
+            "linkedinlink": null,
+            "youtubelink": null,
+            "gmblink": null,
+            "pinterestlink": null,
+            "isapproved": null,
+            "digitalfile": null,
+            "logofile": null,
+            "googledrivefolderid": null,
+            "status": "Smooth",
+            "isactive": 1,
+            "profilestatus": null,
+            "iscredential": null,
+            "createddate": null,
+            "updateddate": null,
+            "instagramUsername": null,
+            "instagramPassword": null,
+            "tiktokUsername": null,
+            "tiktokPassword": null,
+            "snapchatUsername": null,
+            "snapchatPassword": null,
+            "twitterUsername": null,
+            "twitterPassword": null,
+            "products/services": [
+              "Handcrafted Clothing: Offering exquisitely handcrafted garments, emphasizing artisanal quality, unique details, and traditional craftsmanship. Each piece is meticulously created by skilled artisans, ensuring superior finish and a distinct, personal touch that mass-produced clothing lacks. This includes hand-embroidered work, intricate embellishments, and custom fabric treatments.",
+              "Designer Lehanga / Designer Lehenga: Specializing in high-end, designer lehangas (also spelled lehnga, lehenga choli) perfect for weddings, festive occasions, and special events. These couture pieces feature unique designs, luxurious fabrics, intricate embellishments, and contemporary styling combined with traditional aesthetics, ensuring a show-stopping look for every client. Options include various silhouettes like A-line, mermaid, circular, and kalidar lehangas.",
+              "Customized Outfits / Bespoke Clothing: Providing a bespoke tailoring service for customized outfits tailored to individual preferences, body measurements, and specific event requirements. Clients can collaborate on design, choose fabrics, colors, and embellishments to create unique dresses, gowns, anarkalis, sarees, or other Indian ethnic wear. This personalized approach ensures a perfect fit, unparalleled comfort, and a truly one-of-a-kind garment that reflects the client's vision and style."
+            ]
+          }
+        },
+        "binary": {}
+      }
+    ],
+    "Simple Vector Store": [
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 1,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Resha By Mirika"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 2,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "kanakpatel@gmail.com"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 3,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Kanakbhai"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 4,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "+919825061933"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 5,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Rumit"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 6,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "+919825061933"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 7,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "+919825061933"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 8,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Clothes"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 9,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Smooth"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 10,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Handcrafted Clothing: Offering exquisitely handcrafted garments, emphasizing artisanal quality, unique details, and traditional craftsmanship. Each piece is meticulously created by skilled artisans, ensuring superior finish and a distinct, personal touch that mass-produced clothing lacks. This includes hand-embroidered work, intricate embellishments, and custom fabric treatments."
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 11,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Designer Lehanga / Designer Lehenga: Specializing in high-end, designer lehangas (also spelled lehnga, lehenga choli) perfect for weddings, festive occasions, and special events. These couture pieces feature unique designs, luxurious fabrics, intricate embellishments, and contemporary styling combined with traditional aesthetics, ensuring a show-stopping look for every client. Options include various silhouettes like A-line, mermaid, circular, and kalidar lehangas."
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 12,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Customized Outfits / Bespoke Clothing: Providing a bespoke tailoring service for customized outfits tailored to individual preferences, body measurements, and specific event requirements. Clients can collaborate on design, choose fabrics, colors, and embellishments to create unique dresses, gowns, anarkalis, sarees, or other Indian ethnic wear. This personalized approach ensures a perfect fit, unparalleled comfort, and a truly one-of-a-kind garment that reflects the client's vision and style."
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 13,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Resha By Mirika"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 14,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "kanakpatel@gmail.com"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 15,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Kanakbhai"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 16,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "+919825061933"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 17,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Rumit"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 18,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "+919825061933"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 19,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "+919825061933"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 20,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Clothes"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 21,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Smooth"
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 22,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Handcrafted Clothing: Offering exquisitely handcrafted garments, emphasizing artisanal quality, unique details, and traditional craftsmanship. Each piece is meticulously created by skilled artisans, ensuring superior finish and a distinct, personal touch that mass-produced clothing lacks. This includes hand-embroidered work, intricate embellishments, and custom fabric treatments."
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 23,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Designer Lehanga / Designer Lehenga: Specializing in high-end, designer lehangas (also spelled lehnga, lehenga choli) perfect for weddings, festive occasions, and special events. These couture pieces feature unique designs, luxurious fabrics, intricate embellishments, and contemporary styling combined with traditional aesthetics, ensuring a show-stopping look for every client. Options include various silhouettes like A-line, mermaid, circular, and kalidar lehangas."
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 24,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Customized Outfits / Bespoke Clothing: Providing a bespoke tailoring service for customized outfits tailored to individual preferences, body measurements, and specific event requirements. Clients can collaborate on design, choose fabrics, colors, and embellishments to create unique dresses, gowns, anarkalis, sarees, or other Indian ethnic wear. This personalized approach ensures a perfect fit, unparalleled comfort, and a truly one-of-a-kind garment that reflects the client's vision and style."
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 25,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Handcrafted Clothing: Offering exquisitely handcrafted garments, emphasizing artisanal quality, unique details, and traditional craftsmanship. Each piece is meticulously created by skilled artisans, ensuring superior finish and a distinct, personal touch that mass-produced clothing lacks. This includes hand-embroidered work, intricate embellishments, and custom fabric treatments."
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 26,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Designer Lehanga / Designer Lehenga: Specializing in high-end, designer lehangas (also spelled lehnga, lehenga choli) perfect for weddings, festive occasions, and special events. These couture pieces feature unique designs, luxurious fabrics, intricate embellishments, and contemporary styling combined with traditional aesthetics, ensuring a show-stopping look for every client. Options include various silhouettes like A-line, mermaid, circular, and kalidar lehangas."
+        }
+      },
+      {
+        "json": {
+          "metadata": {
+            "source": "blob",
+            "blobType": "application/json",
+            "line": 27,
+            "loc": {
+              "lines": {
+                "from": 1,
+                "to": 1
+              }
+            }
+          },
+          "pageContent": "Customized Outfits / Bespoke Clothing: Providing a bespoke tailoring service for customized outfits tailored to individual preferences, body measurements, and specific event requirements. Clients can collaborate on design, choose fabrics, colors, and embellishments to create unique dresses, gowns, anarkalis, sarees, or other Indian ethnic wear. This personalized approach ensures a perfect fit, unparalleled comfort, and a truly one-of-a-kind garment that reflects the client's vision and style."
+        }
+      }
+    ]
+  },
   "settings": {
     "executionOrder": "v1"
   },
@@ -284,6 +845,6 @@
     }
   ],
   "triggerCount": 0,
-  "updatedAt": "2025-11-27T09:46:45.450Z",
-  "versionId": "614d4480-69e6-4d53-9f34-f79a500fc6d3"
+  "updatedAt": "2025-11-29T11:51:14.000Z",
+  "versionId": "0db538d8-901d-44e7-b83f-f8bab8e966ad"
 }
